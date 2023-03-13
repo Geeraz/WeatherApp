@@ -75,15 +75,3 @@ function parseHourlyWeather({ hourly, current_weather }) {
     })
     .filter(({ timestamp }) => timestamp >= current_weather.time * 1000);
 }
-
-function renderWeather({ current, daily, hourly }) {
-  renderWeather(current);
-  // renderWeather(daily);
-  // renderWeather(hourly);
-  document.body.classList.remove("blurred");
-}
-
-function renderCurrentWeather(current) {
-  document.querySelector("[data-current-temp]").textContent =
-    current.currentTemp;
-}

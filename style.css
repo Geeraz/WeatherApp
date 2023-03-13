@@ -10,10 +10,33 @@ body {
   color: hsl(200, 100%, 10%);
   font-family: sans-serif;
 }
+nav {
+  text-align: center;
+}
+
+.country-input {
+  padding: 5px;
+  border-radius: 5px;
+  transform: translate(40px);
+}
+.check {
+  background-color: hsl(200, 100%, 20%);
+  color: #fff;
+  text-decoration: none;
+  padding: 5px;
+  border-radius: 5px;
+  margin-left: 50px;
+}
+
 .blurred {
   filter: blur(3px);
   overflow: hidden;
 }
+
+.hidden {
+  display: none;
+}
+
 .header {
   display: flex;
   align-items: center;
