@@ -16,6 +16,13 @@ check.addEventListener("click", function (e) {
   parseData();
 });
 
+// Search on enter
+document.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    check.click();
+  }
+});
+
 function renderWeather({ current, daily, hourly }) {
   renderCurrentWeather(current);
   renderDailyWeather(daily);
