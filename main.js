@@ -1,19 +1,39 @@
 import { ICON_MAP } from "./iconMap.js";
-import { getLocationTemp } from "./weather.js";
+import { getTemp } from "./weather.js";
+import { getLocation } from "./location.js";
 
 const countryInput = document.querySelector(".country-input");
 const check = document.querySelector(".check");
+const loader=document.querySelector(".loader");
+const body=document.querySelector(".body")
+const userData=document.querySelector(".user-data")
+const country=document.querySelector(".country")
+
+let lng,lat,timezone 
+
+// Initial show
+let data,data1
+async function parseData(count) {
+  
+  loader.classList.remove("hidden")
+   data = await getLocation(count); 
+  console.log(data);
+   data1 = await getTemp(data)
+  console.log(data1);
+  renderWeather(data1)
+  loader.classList.add("hidden")
+  body.classList.remove("blurred")
+  // userData.innerHTML="";
+  country.textContent=data.fullName
+}
+parseData("New York")
+// setInterval(myTimer, 1000);
+
 
 check.addEventListener("click", function (e) {
   e.preventDefault();
-
-  async function parseData() {
-    const data = await getLocationTemp(countryInput.value);
-    console.log(data); // log the fetched data to the console
-
-    renderWeather(data);
-  }
-  parseData();
+  body.classList.add("blurred")
+  parseData(countryInput.value);
 });
 
 // Search on enter
@@ -27,7 +47,6 @@ function renderWeather({ current, daily, hourly }) {
   renderCurrentWeather(current);
   renderDailyWeather(daily);
   renderHourlyWeather(hourly);
-  document.querySelector(".body").classList.remove("blurred");
 }
 
 function setValue(selector, value, { parent = document } = {}) {
@@ -86,4 +105,17 @@ function renderHourlyWeather(hourly) {
     elemet.querySelector("[data-icon]").src = getIconUrl(hour.iconCode);
     hourlySection.append(elemet);
   });
+}
+
+// Getting location
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(showPosition);
+} else {
+  console.log("Geolocation is not supported by this browser.");
+}
+
+function showPosition(position) {
+   lat = position.coords.latitude;
+   lng = position.coords.longitude;
+   console.log(lat,lng);
 }

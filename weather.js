@@ -1,16 +1,6 @@
 let obj = {};
 
-async function getLocationTemp(location) {
-  const response = await fetch(
-    `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(
-      location
-    )}&key=4ecda18c50f140a5ac65e71f73ae52f8`
-  );
-  const data = await response.json();
-
-  const timezone = data.results[0].annotations.timezone.name;
-  const { lat, lng } = data.results[0].geometry;
-
+export async function getTemp({ lat, lng, timezone }) {
   const response2 = await fetch(
     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&hourly=temperature_2m,apparent_temperature,precipitation,weathercode,windspeed_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,precipitation_sum&current_weather=true&timeformat=unixtime&timezone=${timezone}`
   );
@@ -23,8 +13,6 @@ async function getLocationTemp(location) {
   };
   return obj;
 }
-
-export { getLocationTemp };
 
 function parseCurrentWeather({ current_weather, daily }) {
   const {
