@@ -1,0 +1,8 @@
+# Ignoriraj .env datoteke
+.env
+
+# Ignoriraj direktorij node_modules
+node_modules/
+
+# Ignoriraj sve .log datoteke
+*.log
