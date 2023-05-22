@@ -5,22 +5,32 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/style.css" />
   </head>
-  <body class="">
+
+  <body>
     <nav>
       <h1>Weather overcast</h1>
       <span class="loader hidden"></span>
       <div class="input-container">
-        <input class="country-input" type="text" />
-        <a class="check" href="#">Check</a>
+        <div class="left-nav">
+          <input
+            class="country-input"
+            type="text"
+            placeholder="Enter city or town"
+          />
+          <a class="check" href="#"><div class="check-div">Check</div></a>
+        </div>
         <div class="user-data">
           <div class="country"></div>
-         <div class="date"></div>
-      </div>
+          <div class="date"></div>
+        </div>
       </div>
     </nav>
     <div class="body blurred">

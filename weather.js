@@ -1,18 +1,17 @@
-let obj = {};
-
 export async function getTemp({ lat, lng, timezone }) {
   const response2 = await fetch(
     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&hourly=temperature_2m,apparent_temperature,precipitation,weathercode,windspeed_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,precipitation_sum&current_weather=true&timeformat=unixtime&timezone=${timezone}`
   );
   const data2 = await response2.json();
 
-  obj = {
+  return {
     current: parseCurrentWeather(data2),
     daily: parseDailyWeather(data2),
     hourly: parseHourlyWeather(data2),
   };
-  return obj;
 }
+
+// Parsing data into object and reasigning variables
 
 function parseCurrentWeather({ current_weather, daily }) {
   const {

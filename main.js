@@ -4,35 +4,49 @@ import { getLocation } from "./location.js";
 
 const countryInput = document.querySelector(".country-input");
 const check = document.querySelector(".check");
-const loader=document.querySelector(".loader");
-const body=document.querySelector(".body")
-const userData=document.querySelector(".user-data")
-const country=document.querySelector(".country")
+const loader = document.querySelector(".loader");
+const body = document.querySelector(".body");
+const country = document.querySelector(".country");
+const date = document.querySelector(".date");
 
-let lng,lat,timezone 
+// Getting user timezone
+let userTimeZone;
+function getUserTimeZone() {
+  userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return userTimeZone;
+}
+getUserTimeZone();
+
+// Crating new date
+const now = new Date();
+date.textContent = now.toLocaleString(undefined, {
+  timeZone: `${userTimeZone}`,
+});
 
 // Initial show
-let data,data1
-async function parseData(count) {
-  
-  loader.classList.remove("hidden")
-   data = await getLocation(count); 
-  console.log(data);
-   data1 = await getTemp(data)
-  console.log(data1);
-  renderWeather(data1)
-  loader.classList.add("hidden")
-  body.classList.remove("blurred")
-  // userData.innerHTML="";
-  country.textContent=data.fullName
+parseData("Berlin");
+
+let data, data1;
+
+async function parseData(location) {
+  loader.classList.remove("hidden");
+
+  data = await getLocation(location);
+  data1 = await getTemp(data);
+  renderWeather(data1);
+  renderHourlyWeather(data1.hourly.slice(0, 24));
+
+  loader.classList.add("hidden");
+  body.classList.remove("blurred");
+  country.textContent = data.fullName;
+
+  dayDataShow();
 }
-parseData("New York")
-// setInterval(myTimer, 1000);
 
-
+// Input cheker
 check.addEventListener("click", function (e) {
   e.preventDefault();
-  body.classList.add("blurred")
+  body.classList.add("blurred");
   parseData(countryInput.value);
 });
 
@@ -43,21 +57,42 @@ document.addEventListener("keypress", (e) => {
   }
 });
 
+// Rendering hourly info by clicking on day card
+function dayDataShow() {
+  const hourRows = document.querySelectorAll(".hour-row");
+  const dayCards = document.querySelectorAll(".day-card");
+  dayCards.forEach((day) =>
+    day.addEventListener("click", (e) => {
+      e.preventDefault;
+      hourlySection.innerHTML = "";
+
+      const pressedDay =
+        e.currentTarget.querySelector("[data-date]").textContent;
+      const dayData = renderHourlyWeather(
+        data1.hourly.filter(function cheker({ timestamp }) {
+          return DAY_FORMATTER.format(timestamp) === pressedDay;
+        })
+      );
+    })
+  );
+}
+
+// Rendering data separately, destructuring parsed object.
 function renderWeather({ current, daily, hourly }) {
   renderCurrentWeather(current);
   renderDailyWeather(daily);
   renderHourlyWeather(hourly);
 }
 
+// Helper function for selecting elements
 function setValue(selector, value, { parent = document } = {}) {
   parent.querySelector(`[data-${selector}]`).textContent = value;
 }
 
+// Helper function for geting icon path
 function getIconUrl(iconCode) {
   return `icons/${ICON_MAP.get(iconCode)}.svg`;
 }
-
-const currentIcon = document.querySelector("[data-current-icon]");
 
 function renderCurrentWeather(current) {
   setValue("current-temp", current.currentTemp);
@@ -71,7 +106,10 @@ function renderCurrentWeather(current) {
 
 const dailySection = document.querySelector("[data-day-section]");
 const dayCardTemplate = document.getElementById("day-card-template");
-const DAY_FORMATTER = new Intl.DateTimeFormat(undefined, { weekday: "long" });
+const DAY_FORMATTER = new Intl.DateTimeFormat(undefined, {
+  weekday: "long",
+  timeZone: `${userTimeZone}`,
+});
 
 function renderDailyWeather(daily) {
   dailySection.innerHTML = "";
@@ -88,6 +126,7 @@ const hourlySection = document.querySelector("[data-hour-section]");
 const hourRowTemplate = document.getElementById("hour-row-template");
 const HOUR_FORMATTER = new Intl.DateTimeFormat(undefined, {
   hour: "numeric",
+  timeZone: `${userTimeZone}`,
 });
 
 function renderHourlyWeather(hourly) {
@@ -105,17 +144,4 @@ function renderHourlyWeather(hourly) {
     elemet.querySelector("[data-icon]").src = getIconUrl(hour.iconCode);
     hourlySection.append(elemet);
   });
-}
-
-// Getting location
-if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(showPosition);
-} else {
-  console.log("Geolocation is not supported by this browser.");
-}
-
-function showPosition(position) {
-   lat = position.coords.latitude;
-   lng = position.coords.longitude;
-   console.log(lat,lng);
 }

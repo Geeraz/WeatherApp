@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "@popperjs/core": "^2.11.6",
-    "boostrap": "^2.0.0"
+    "boostrap": "^2.0.0",
+    "dotenv": "^16.0.3",
+    "toastr": "^2.1.4"
   }
 }
